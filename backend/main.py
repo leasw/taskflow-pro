@@ -1,12 +1,17 @@
+from pathlib import Path
+
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from database import Base, engine, get_db
 from models import Task
 from schemas import TaskCreate, TaskDetail, TaskListItem, TaskUpdate
+
+FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
 
 app = FastAPI(title="TaskFlow Pro API")
 
@@ -74,3 +79,6 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     task = _get_task_or_404(db, task_id)
     db.delete(task)
     db.commit()
+
+
+app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")

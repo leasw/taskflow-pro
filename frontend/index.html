@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TaskFlow Pro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: "class" };
+</script>
+<style>
+  :root {
+    color-scheme: light dark;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", sans-serif;
+  }
+  .glass-card {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+</style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-900 dark:to-slate-950 text-slate-800 dark:text-slate-100 transition-colors">
+
+  <div class="max-w-3xl mx-auto px-4 py-6 sm:py-10">
+
+    <header class="flex items-center justify-between mb-6">
+      <h1 class="text-xl sm:text-2xl font-semibold tracking-tight">TaskFlow Pro</h1>
+      <button
+        id="themeToggleBtn"
+        class="w-10 h-10 rounded-full bg-white/60 dark:bg-white/10 glass-card shadow-md flex items-center justify-center text-lg"
+        aria-label="테마 토글"
+      >
+        <span id="themeIcon">🌙</span>
+      </button>
+    </header>
+
+    <!-- 추가 폼 -->
+    <section class="glass-card bg-white/70 dark:bg-white/10 rounded-2xl shadow-lg p-4 sm:p-5 mb-6">
+      <form id="taskForm" class="flex flex-col gap-3">
+        <input
+          id="titleInput"
+          type="text"
+          placeholder="업무 제목을 입력하세요"
+          required
+          maxlength="200"
+          class="w-full rounded-xl px-4 py-2.5 bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input
+            id="dueAtInput"
+            type="datetime-local"
+            class="flex-1 rounded-xl px-4 py-2.5 bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <select
+            id="statusInput"
+            class="rounded-xl px-4 py-2.5 bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="todo">할 일</option>
+            <option value="in_progress">진행 중</option>
+            <option value="done">완료</option>
+          </select>
+          <button
+            type="submit"
+            class="rounded-xl px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-medium shadow-md transition-colors"
+          >
+            추가
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 목록 -->
+    <section id="taskList" class="flex flex-col gap-3"></section>
+
+    <p id="emptyMessage" class="text-center text-slate-400 mt-10 hidden">
+      아직 등록된 업무가 없습니다.
+    </p>
+
+  </div>
+
+  <!-- 수정 모달 -->
+  <div id="editModal" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4 hidden z-50">
+    <div class="glass-card bg-white/90 dark:bg-slate-900/90 rounded-2xl shadow-2xl w-full max-w-md p-5 sm:p-6">
+      <h2 class="text-lg font-semibold mb-4">업무 수정</h2>
+      <form id="editForm" class="flex flex-col gap-3">
+        <label class="text-sm text-slate-500 dark:text-slate-400">제목</label>
+        <input
+          id="editTitleInput"
+          type="text"
+          required
+          maxlength="200"
+          class="w-full rounded-xl px-4 py-2.5 bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        <label class="text-sm text-slate-500 dark:text-slate-400">설명</label>
+        <textarea
+          id="editDescriptionInput"
+          rows="3"
+          class="w-full rounded-xl px-4 py-2.5 bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ></textarea>
+        <label class="text-sm text-slate-500 dark:text-slate-400">마감 시각</label>
+        <input
+          id="editDueAtInput"
+          type="datetime-local"
+          class="w-full rounded-xl px-4 py-2.5 bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        <label class="text-sm text-slate-500 dark:text-slate-400">상태</label>
+        <select
+          id="editStatusInput"
+          class="w-full rounded-xl px-4 py-2.5 bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          <option value="todo">할 일</option>
+          <option value="in_progress">진행 중</option>
+          <option value="done">완료</option>
+        </select>
+        <div class="flex justify-end gap-2 mt-2">
+          <button
+            type="button"
+            id="cancelEditBtn"
+            class="rounded-xl px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+          >
+            취소
+          </button>
+          <button
+            type="submit"
+            class="rounded-xl px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium transition-colors"
+          >
+            저장
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 삭제 확인 다이얼로그 -->
+  <div id="deleteModal" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4 hidden z-50">
+    <div class="glass-card bg-white/90 dark:bg-slate-900/90 rounded-2xl shadow-2xl w-full max-w-sm p-5 sm:p-6">
+      <h2 class="text-lg font-semibold mb-2">업무 삭제</h2>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mb-5">정말로 이 업무를 삭제하시겠습니까?</p>
+      <div class="flex justify-end gap-2">
+        <button
+          type="button"
+          id="cancelDeleteBtn"
+          class="rounded-xl px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+        >
+          취소
+        </button>
+        <button
+          type="button"
+          id="confirmDeleteBtn"
+          class="rounded-xl px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium transition-colors"
+        >
+          삭제
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
