@@ -36,16 +36,16 @@ MVP는 아래 3개 Phase로 진행한다. Phase 이름과 개수는 고정이며
 
 | 단계 | 검증 방법 | 완료 |
 |---|---|---|
-| 1. backend/ 폴더 및 의존성 설치 | requirements.txt에 5개 패키지만 존재 확인 | [ ] |
-| 2. SQLAlchemy 모델 정의 (Task, 7필드) | 02-specs.md 필드 순서·타입과 대조 | [ ] |
-| 3. DB 세션/엔진 설정 (SQLite) | 앱 기동 시 DB 파일 생성 확인 | [ ] |
-| 4. Pydantic 스키마 정의 (요청/응답 분리) | 목록 응답에 description 제외 확인 | [ ] |
-| 5. POST /api/tasks 구현 | 201 응답, 스펙 외 필드 422 확인 | [ ] |
-| 6. GET /api/tasks (목록) 구현 | 200 응답, description 미포함 확인 | [ ] |
-| 7. GET /api/tasks/{id} (단건) 구현 | 200/404, description 포함 확인 | [ ] |
-| 8. PUT /api/tasks/{id} 구현 | 200/400/404 응답 확인 | [ ] |
-| 9. DELETE /api/tasks/{id} 구현 | 204/404 응답 확인 | [ ] |
-| 10. pytest 전체 통과 + Swagger(/docs) 확인 | 테스트 전부 통과, /docs에서 5개 API 노출 확인 | [ ] |
+| 1. backend/ 폴더 및 의존성 설치 | requirements.txt에 5개 패키지만 존재 확인 | [x] |
+| 2. SQLAlchemy 모델 정의 (Task, 7필드) | 02-specs.md 필드 순서·타입과 대조 | [x] |
+| 3. DB 세션/엔진 설정 (SQLite) | 앱 기동 시 DB 파일 생성 확인 | [x] |
+| 4. Pydantic 스키마 정의 (요청/응답 분리) | 목록 응답에 description 제외 확인 | [x] |
+| 5. POST /api/tasks 구현 | 201 응답, 스펙 외 필드 422 확인 | [x] |
+| 6. GET /api/tasks (목록) 구현 | 200 응답, description 미포함 확인 | [x] |
+| 7. GET /api/tasks/{id} (단건) 구현 | 200/404, description 포함 확인 | [x] |
+| 8. PUT /api/tasks/{id} 구현 | 200/400/404 응답 확인 | [x] |
+| 9. DELETE /api/tasks/{id} 구현 | 204/404 응답 확인 | [x] |
+| 10. pytest 전체 통과 + Swagger(/docs) 확인 | 테스트 전부 통과, /docs에서 5개 API 노출 확인 | [x] |
 
 ---
 
